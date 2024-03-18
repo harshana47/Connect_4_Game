@@ -17,7 +17,6 @@ public interface Board {
 
     boolean existLegalMove();
     void updateMove(int col,Piece move);
-
     Winner findWinner();
 
     Piece[][] getPieces();

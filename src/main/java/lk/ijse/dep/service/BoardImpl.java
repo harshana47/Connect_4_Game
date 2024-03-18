@@ -101,7 +101,7 @@ public class BoardImpl implements Board{
                 }
             }
         }
-        return new Winner(Piece.EMPTY);
+        return new Winner(Piece.EMPTY);//check
     }
 
     @Override
