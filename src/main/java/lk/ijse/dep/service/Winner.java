@@ -7,6 +7,7 @@ public class Winner {
     private int col2;
     private int row2;
 
+
     public Winner(Piece winningPiece) {
         this.winningPiece = winningPiece;
     }

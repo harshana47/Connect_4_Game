@@ -26,72 +26,50 @@ public class AiPlayer extends Player {
 
     //best move eka hoyana part eka
     private int AiCOl() {
-        Piece[][] piece1 = board.getPieces();
+        Piece[][] pieces = board.getPieces();
         int col;
-        for (int i = 0; i < 5; i++) {
-            // Horizontal check
-            if (piece1[i][0] == piece1[i][1] && piece1[i][1] == piece1[i][2] && piece1[i][0] == Piece.GREEN) {
-                if (piece1[i][3] == Piece.EMPTY) {
-                    return 3;
+
+        //winnind moves check karnawa
+        for (col = 0; col < Board.NUM_OF_COLS; col++) {
+            if (board.isLegalMove(col)) {
+                int row = board.findNextAvailableSpot(col); // next available spot eka check karanawa
+                // e spot ekata green simulate karanawa
+                pieces[col][row] = Piece.GREEN;
+                Winner winner = board.findWinner();
+
+                // e column ekata piece eka dala ai ta dinanna puluwannam e spot eka return karanawa
+                if (winner.getWinningPiece() == Piece.GREEN) {
+                    pieces[col][row] = Piece.EMPTY; // simulated move aka undo karnawa
+                    return col;
                 }
-            } else if (piece1[i][0] == piece1[i][1] && piece1[i][1] == piece1[i][2] && piece1[i][0] == Piece.BLUE) {
-                if (piece1[i][3] == Piece.EMPTY) {
-                    return 3;
-                }
-            }
-            else if(piece1[1][i]==piece1[2][i] && piece1[2][i]==piece1[3][i] && piece1[1][i]==Piece.GREEN){
-                if(piece1[4][i]==Piece.EMPTY){
-                    return 4;
-                }
-            }
-            else if(piece1[1][i]==piece1[2][i] && piece1[2][i]==piece1[3][i] && piece1[1][i]==Piece.BLUE){
-                if(piece1[4][i]==Piece.EMPTY){
-                    return 4;
-                }
-            }
-            else if(piece1[2][i]==piece1[3][i] && piece1[3][i]==piece1[4][i] && piece1[2][i]==Piece.GREEN){
-                if(piece1[5][i]==Piece.EMPTY){
-                    return 5;
-                }
-            }
-            else if (piece1[2][i]==piece1[3][i] && piece1[3][i]==piece1[4][i] && piece1[2][i]==Piece.BLUE){
-                if(piece1[5][i]==Piece.EMPTY){
-                    return 5;
-                }
-            }
-            else if(piece1[3][i]==piece1[2][i] && piece1[2][i]==piece1[1][i] && piece1[3][i]==Piece.GREEN){
-                if(piece1[0][i]==Piece.EMPTY){
-                    return 0;
-                }
-            }
-            else if(piece1[3][i]==piece1[2][i] && piece1[2][i]==piece1[1][i] && piece1[3][i]==Piece.BLUE){
-                if(piece1[0][i]==Piece.EMPTY){
-                    return 0;
-                }
-            }
-            else if(piece1[4][i]==piece1[3][i] && piece1[3][i]==piece1[2][i] && piece1[3][i]==Piece.GREEN){
-                if(piece1[1][i]==Piece.EMPTY){
-                    return 1;
-                }
-            }
-            else if(piece1[4][i]==piece1[3][i] && piece1[3][i]==piece1[2][i] && piece1[3][i]==Piece.BLUE){
-                if(piece1[1][i]==Piece.EMPTY){
-                    return 1;
-                }
-            }
-            else if(piece1[5][i]==piece1[4][i] && piece1[4][i]==piece1[3][i] && piece1[5][i]==Piece.GREEN){
-                if(piece1[2][i]==Piece.EMPTY){
-                    return 2;
-                }
-            }
-            else if(piece1[5][i]==piece1[4][i] && piece1[4][i]==piece1[3][i] && piece1[5][i]==Piece.BLUE){
-                if(piece1[2][i]==Piece.EMPTY){
-                    return 2;
-                }
+
+                // if eken eliyen giyorh undo karanne methanin
+                pieces[col][row] = Piece.EMPTY;
             }
         }
+
+        // enamy eka win karana ewa balala block karanawa
+        for (col = 0; col < Board.NUM_OF_COLS; col++) {
+            if (board.isLegalMove(col)) {
+                int row = board.findNextAvailableSpot(col);
+                // e spot ekata green simulate karanawa
+                pieces[col][row] = Piece.BLUE;
+                Winner opponentWinner = board.findWinner();
+
+                // enemy eka ilaga move eken win karanwanam block karanawa
+                if (opponentWinner.getWinningPiece() == Piece.BLUE) {
+                    pieces[col][row] = Piece.EMPTY; // undo simulated move
+                    return col;
+                }
+
+                // if eken out unot undo karanawa
+                pieces[col][row] = Piece.EMPTY;
+            }
+        }
+
+        // wining move or block akaranna naththam random move ekak danawa
         do {
-            col = (int) (Math.random() * 6);
+            col = (int) (Math.random() * Board.NUM_OF_COLS);
         } while (!board.isLegalMove(col));
 
         return col;
